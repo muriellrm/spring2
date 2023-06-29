@@ -2,11 +2,10 @@ package academy.devdojo.springboot2essentials.domain;
 
 import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
 public class Anime {
+    private Long id;
     private String name;
 
 }
