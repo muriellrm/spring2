@@ -1,6 +1,8 @@
 package academy.devdojo.springboot2essentials.controller;
 
 import academy.devdojo.springboot2essentials.domain.Anime;
+import academy.devdojo.springboot2essentials.models.AnimePostRequest;
+import academy.devdojo.springboot2essentials.models.AnimePutRequest;
 import academy.devdojo.springboot2essentials.service.AnimeService;
 import academy.devdojo.springboot2essentials.util.DataUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import java.util.List;
 public class AnimeController {
     private final DataUtil dataUtil;
     private final AnimeService animeService;
+
     @GetMapping
     public ResponseEntity<List<Anime>> findAll() {
         log.info(dataUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
@@ -28,11 +31,11 @@ public class AnimeController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<Anime> find(@PathVariable Long id) {
         log.info(dataUtil.formatLocalDateTimeToDatabaseStyle(LocalDateTime.now()));
-        return ResponseEntity.ok(animeService.find(id));
+        return ResponseEntity.ok(animeService.findOrThrowException(id));
     }
 
     @PostMapping
-    public ResponseEntity<Anime> save(@RequestBody Anime anime) {
+    public ResponseEntity<Anime> save(@RequestBody AnimePostRequest anime) {
         return new ResponseEntity(animeService.save(anime), HttpStatus.CREATED);
     }
 
@@ -43,7 +46,7 @@ public class AnimeController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody Anime anime) {
+    public ResponseEntity<Void> update(@RequestBody AnimePutRequest anime) {
         animeService.update(anime);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

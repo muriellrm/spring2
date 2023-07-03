@@ -1,47 +1,43 @@
 package academy.devdojo.springboot2essentials.service;
 
 import academy.devdojo.springboot2essentials.domain.Anime;
+import academy.devdojo.springboot2essentials.mapper.AnimeMapper;
+import academy.devdojo.springboot2essentials.models.AnimePostRequest;
+import academy.devdojo.springboot2essentials.models.AnimePutRequest;
+import academy.devdojo.springboot2essentials.repository.AnimeRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Service
+@RequiredArgsConstructor
 public class AnimeService {
 
-    private static List<Anime> animes;
-
-    static {
-        animes = new ArrayList(List.of(new Anime(1L, "DBZ"), new Anime(2L, "Naruto")));
-    }
+    private final AnimeRepository animeRepository;
 
     public List<Anime> findAll() {
-        return animes;
+        return animeRepository.findAll();
     }
 
-    public Anime find(Long id) {
-        return animes
-                .stream()
-                .filter(anime -> anime.getId().equals(id))
-                .findFirst()
+    public Anime findOrThrowException(Long id) {
+        return animeRepository
+                .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not Found"));
     }
 
-    public Anime save(Anime anime) {
-        anime.setId(ThreadLocalRandom.current().nextLong(3, 100000));
-        animes.add(anime);
-        return anime;
+    public Anime save(AnimePostRequest animePostRequest) {
+        return animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequest));
     }
 
     public void delete(Long id) {
-        animes.remove(find(id));
+        animeRepository.delete(findOrThrowException(id));
     }
 
-    public void update(Anime anime) {
-        delete(anime.getId());
-        animes.add(anime);
+    public void update(AnimePutRequest animePutRequest) {
+        findOrThrowException(animePutRequest.getId());
+        animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePutRequest));
     }
 }
