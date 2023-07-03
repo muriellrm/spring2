@@ -9,6 +9,7 @@ import academy.devdojo.springboot2essentials.repository.AnimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -31,6 +32,7 @@ public class AnimeService {
                 .orElseThrow(() -> new BadRequestException( "Anime not Found"));
     }
 
+    @Transactional
     public Anime save(AnimePostRequest animePostRequest) {
         return animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequest));
     }
