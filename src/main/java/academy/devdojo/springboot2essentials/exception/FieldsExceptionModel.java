@@ -5,7 +5,7 @@ import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
-public class MethodArgumentNotValidExceptionModel {
+public class FieldsExceptionModel {
     private String field;
     private String message;
 }

@@ -8,5 +8,5 @@ import java.util.List;
 @Data
 @SuperBuilder
 public class ValidationExceptionDetails extends ExceptionDetails {
-    private List<MethodArgumentNotValidExceptionModel> errors;
+    private List<FieldsExceptionModel> errors;
 }
